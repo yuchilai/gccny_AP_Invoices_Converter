@@ -2,6 +2,7 @@ import { Component, VERSION } from '@angular/core';
 import { ExcelService } from './service/excel.service';
 import * as XLSX from 'xlsx';
 import { IInvoice, Invoice } from './invoice.model';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'my-app',
@@ -9,7 +10,7 @@ import { IInvoice, Invoice } from './invoice.model';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  name = 'Angular ' + VERSION.major;
+  name = 'Cassie';
   willDownload = false;
   invoiceKeyList: string[] = [];
   invoices: any[] = [];
@@ -154,5 +155,9 @@ export class AppComponent {
       );
       el.setAttribute('download', 'xlsxtojson.json');
     }, 1000);
+  }
+
+  drop(event: CdkDragDrop<string[]>) {
+    moveItemInArray(this.invoiceKeyList, event.previousIndex, event.currentIndex);
   }
 }

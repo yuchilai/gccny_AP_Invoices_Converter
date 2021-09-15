@@ -1,7 +1,18 @@
 <hello name="{{ name }}"></hello>
-<p>
-  Start editing to see some magic happen :)
-</p>
+
+<h2>Excel field name order</h2>
+
+
+
+<div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
+
+  <div class="example-box" *ngFor="let item of invoiceKeyList; let i = index" cdkDrag>
+    <div class="example-custom-placeholder" *cdkDragPlaceholder></div>
+    {{ i+1 }}. {{ item }}
+  </div>
+
+</div>
+
 
 <input type="file" (change)="onFileChange($event)" />
 
