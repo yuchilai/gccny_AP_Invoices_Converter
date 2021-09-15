@@ -320,8 +320,9 @@ export class AppComponent {
     this.isAutoDowload = !this.isAutoDowload;
   }
 
-  dowloadTheFile(item): void{
-    this.excelService.exportAsExcelFile(item, this.exportFileName, false);
+  dowloadTheFile(index: number): void{
+    // this.excelService.exportAsExcelFile(item, this.exportFileName, false);
+    this.excelService.exportAsExcelFile(this.outputList[index], this.exportFileName, false);
   }
 
   addShakingAnimation(targetId: string): void{
