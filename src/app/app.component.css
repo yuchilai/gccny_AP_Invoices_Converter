@@ -91,6 +91,8 @@ p {
 .btn-box {
   display: flex;
   justify-content: flex-end;
+  margin-top: 25px;
+  margin-bottom: 5px;
 }
 
 .control-accpet-box {
@@ -130,14 +132,43 @@ p {
   line-height: 1;
 }
 
-.input-box{
+.input-box {
   border: #143d59 solid 1px;
   border-radius: 5px;
   padding: 30px;
   margin: 5px;
 }
 
-.line{
+.line {
   border-top: #143d59 solid 1px;
   margin: 50px 0;
+}
+
+.add-icon {
+  height: 100%;
+  width: 100%;
+  z-index: 100;
+  cursor: pointer;
+  /* cursor: crosshair; */
+  text-align: center;
+}
+
+.add-input {
+  line-height: 38px;
+}
+
+#add-last-box {
+  line-height: 38px;
+}
+
+.list-box {
+  display: flex;
+  justify-content: center;
+}
+
+.adding-mode {
+  border: #143d59 solid 1px;
+  border-radius: 5px;
+  padding: 30px;
+  margin: 5px;
 }

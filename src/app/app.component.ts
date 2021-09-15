@@ -1,4 +1,10 @@
-import { Component, ElementRef, VERSION, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  VERSION,
+  ViewChild,
+  HostListener
+} from '@angular/core';
 import { ExcelService } from './service/excel.service';
 import * as XLSX from 'xlsx';
 import { IInvoice, Invoice } from './invoice.model';
@@ -10,9 +16,7 @@ import { ErrorMsg, IErrorMsg } from './errorMsg.model';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-
 export class AppComponent {
-
   @ViewChild('myInput')
   myInputVariable: ElementRef;
 
@@ -30,14 +34,22 @@ export class AppComponent {
   notExcelStyle = '  color: #ec8b5e; background-color: #141a46;';
   exportFileName = 'AP_Invoices';
   isEditExportFileName = false;
-
-
-
+  isAdding = false;
+  isSportMode = true;
+  inputToBeAdded?: string;
+  tempName?: string;
 
   constructor(private excelService: ExcelService) {
     const invoice = new Invoice();
     this.invoiceKeyList = Object.keys(invoice);
     console.log(this.invoiceKeyList);
+  }
+
+  @HostListener('window:keyup', ['$event'])
+  keyEvent(event: KeyboardEvent): void {
+    if (event.key === 'Escape') {
+      this.isAdding = false;
+    }
   }
 
   onFileChange(ev) {
@@ -213,6 +225,50 @@ export class AppComponent {
   }
 
   resetFile() {
-    this.myInputVariable.nativeElement.value = "";
-}
+    this.myInputVariable.nativeElement.value = '';
+  }
+
+  delItems(i: number): void {
+    this.invoiceKeyList.splice(i, 1);
+  }
+
+  prepareAddingInput(): void {
+    this.isAdding = !this.isAdding;
+  }
+
+  saveInvoiceColumn(): void {
+    if (this.inputToBeAdded !== undefined) {
+      this.inputToBeAdded = this.inputToBeAdded.trim();
+      if (this.inputToBeAdded !== '') {
+        this.invoiceKeyList.push(this.inputToBeAdded);
+        this.inputToBeAdded = undefined;
+        if (!this.isSportMode) {
+          this.isAdding = false;
+        }
+      }
+    }
+  }
+
+  changeMode(): void {
+    this.isSportMode = !this.isSportMode;
+  }
+
+  editExportFileName(): void {
+    this.isEditExportFileName = true;
+    this.tempName = this.exportFileName;
+  }
+
+  cancelExportFileName(): void {
+    this.isEditExportFileName = false;
+  }
+
+  saveExportFileName(): void {
+    if (this.tempName !== undefined) {
+      this.tempName = this.tempName.trim();
+      if (this.tempName !== '') {
+        this.exportFileName = this.tempName;
+        this.isEditExportFileName = false;
+      }
+    }
+  }
 }
