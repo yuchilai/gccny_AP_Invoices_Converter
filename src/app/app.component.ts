@@ -44,6 +44,7 @@ export class AppComponent {
   outputList: any[] = [];
   displayedList: any[] = [];
   isShowDownloadBtn = false;
+  allFiledNameList: any[] = [];
 
   constructor(private excelService: ExcelService) {
     const invoice = new Invoice();
@@ -53,7 +54,7 @@ export class AppComponent {
   @HostListener('window:keyup', ['$event'])
   keyEvent(event: KeyboardEvent): void {
     if (event.key === 'Escape') {
-      this.isAdding = false;
+      this.isEdit = false;
     }
   }
 
