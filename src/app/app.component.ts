@@ -38,6 +38,7 @@ export class AppComponent {
   isSportMode = true;
   inputToBeAdded?: string;
   tempName?: string;
+  isAutoDowload = true;
 
   constructor(private excelService: ExcelService) {
     const invoice = new Invoice();
@@ -246,6 +247,12 @@ export class AppComponent {
           this.isAdding = false;
         }
       }
+      else{
+        this.addShakingAnimation('add-input');
+      }
+    }
+    else{
+      this.addShakingAnimation('add-input');
     }
   }
 
@@ -269,6 +276,25 @@ export class AppComponent {
         this.exportFileName = this.tempName;
         this.isEditExportFileName = false;
       }
+      else{
+        this.addShakingAnimation('file-name-input-group');
+      }
     }
+    else{
+      this.addShakingAnimation('file-name-input-group');
+    }
+  }
+
+  changeAutoDowload(): void{
+    this.isAutoDowload = !this.isAutoDowload;
+  }
+
+  addShakingAnimation(targetId: string): void{
+    document.getElementById(targetId)?.classList.add("animate__animated");
+    document.getElementById(targetId)?.classList.add("animate__headShake");
+    setTimeout(()=> {
+      document.getElementById(targetId)?.classList.remove("animate__headShake");
+      document.getElementById(targetId)?.classList.remove("animate__headShake");
+    }, 500);
   }
 }
