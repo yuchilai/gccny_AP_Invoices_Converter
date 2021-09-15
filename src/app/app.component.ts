@@ -57,7 +57,7 @@ export class AppComponent {
                 // console.log("k: " + k + ", value: " + invoiceObj[k]);
                 // console.log(key === k);
                 if (key === k) {
-                  if(obj[key] !== undefined){
+                  if (obj[key] !== undefined) {
                     invoiceObj[k] = obj[key];
                     isObjNotEmpty = true;
                   }
@@ -65,18 +65,20 @@ export class AppComponent {
               });
               // console.log("key: " + key + ", value: " + obj[key])
             }
-            console.log(isObjNotEmpty)
-            console.log(invoiceObj)
-            if(isObjNotEmpty){
+            // console.log(isObjNotEmpty)
+            // console.log(invoiceObj)
+            if (isObjNotEmpty) {
               this.invoices.push(invoiceObj);
             }
           });
           this.countLineNO();
-          if(this.invoices.length > 0){
-            this.excelService.exportAsExcelFile(this.invoices, 'export-to-excel');
-          }
-          else{
-            alert('None of the field matched');
+          if (this.invoices.length > 0) {
+            this.excelService.exportAsExcelFile(
+              this.invoices,
+              'export-to-excel'
+            );
+          } else {
+            alert('Sheet ' + i + 'None of the field matched');
           }
         }
       } else {
@@ -94,7 +96,7 @@ export class AppComponent {
               // console.log("k: " + k + ", value: " + invoiceObj[k]);
               // console.log(key === k);
               if (key === k) {
-                if(obj[key] !== undefined){
+                if (obj[key] !== undefined) {
                   invoiceObj[k] = obj[key];
                   isObjNotEmpty = true;
                 }
@@ -102,17 +104,16 @@ export class AppComponent {
             });
             // console.log("key: " + key + ", value: " + obj[key])
           }
-          console.log(isObjNotEmpty)
-          console.log(invoiceObj)
-          if(isObjNotEmpty){
+          // console.log(isObjNotEmpty)
+          // console.log(invoiceObj)
+          if (isObjNotEmpty) {
             this.invoices.push(invoiceObj);
           }
         });
         this.countLineNO();
-        if(this.invoices.length > 0){
+        if (this.invoices.length > 0) {
           this.excelService.exportAsExcelFile(this.invoices, 'export-to-excel');
-        }
-        else{
+        } else {
           alert('None of the field matched');
         }
       }
@@ -121,22 +122,25 @@ export class AppComponent {
   }
 
   countLineNO(): void {
-    console.log(this.invoices.length)
+    console.log(this.invoices.length);
     for (let i = 0; i < this.invoices.length; i++) {
       const item = this.invoices[i];
-      console.log(item);
-      console.log(item.BILL_NO);
+      // console.log(item);
+      // console.log(item.BILL_NO);
       let counting = 1;
-      let j = i
-      // console.log(i--);
-      // console.log(i>0);
-      // for (let j = i; i > 0; i--) {
-      //   const compareObj = this.invoices[j];
-      //   if (item.BILL_NO === compareObj.BILL_NO) {
-      //     counting++;
-      //   }
-      // }
-      // item.LINE_NO = String(counting);
+      console.log('i = ' + i);
+      for (let j = i-1; j >= 0; j--) {
+        console.log('j = ' + j);
+        const compareObj = this.invoices[j];
+        // console.log(compareObj);
+        console.log('counting before = ' + counting);
+        if (item.BILL_NO === compareObj.BILL_NO) {
+          console.log(item.BILL_NO + '===' + compareObj.BILL_NO);
+          counting++;
+          console.log('counting '+counting);
+        }
+      }
+      item.LINE_NO = String(counting);
     }
   }
 
