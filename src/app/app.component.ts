@@ -39,6 +39,7 @@ export class AppComponent {
   inputToBeAdded?: string;
   tempName?: string;
   isAutoDowload = true;
+  hasOutput = false;
 
   constructor(private excelService: ExcelService) {
     const invoice = new Invoice();
