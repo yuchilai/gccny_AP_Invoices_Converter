@@ -193,6 +193,9 @@ p {
   width: 100%;
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
+  align-items: center;
+  row-gap: 20px;
 }
 
 .excel-icon {

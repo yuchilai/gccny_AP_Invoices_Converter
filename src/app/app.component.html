@@ -76,11 +76,11 @@
     <span>Input File Name: </span>
     {{fileName}}
   </div>
-  <div class="excel-output">
-    <div class="excel-icon">
-      <a class="download-link">
+  <div *ngIf="hasOutput" class="excel-output">
+    <div *ngFor="let item of displayedList" class="excel-icon">
+      <a (click)="dowloadTheFile(item.displayedList)" class="download-link">
         <img src="https://cdn.jsdelivr.net/gh/yuchilai/gccny_AP_Invoices_Converter@master/src/app/image/icons8-export-excel-96.png" alt="">
-        <span class="download-name">Download</span>
+        <span class="download-name">{{ item.name }} Download</span>
       </a>
     </div>
   </div>

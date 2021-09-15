@@ -10,6 +10,7 @@ import * as XLSX from 'xlsx';
 import { IInvoice, Invoice } from './invoice.model';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ErrorMsg, IErrorMsg } from './errorMsg.model';
+import { Displayed, IDisplayed } from './displayed.model';
 
 @Component({
   selector: 'my-app',
@@ -40,6 +41,8 @@ export class AppComponent {
   tempName?: string;
   isAutoDowload = true;
   hasOutput = false;
+  outputList: any[] = [];
+  displayedList: any[] = [];
 
   constructor(private excelService: ExcelService) {
     const invoice = new Invoice();
@@ -74,6 +77,8 @@ export class AppComponent {
       // this.setDownload(dataString);
 
       const jsonArr = JSON.parse(dataString);
+      this.outputList = [];
+      this.displayedList = [];
       if (workBook.SheetNames.length !== undefined) {
         for (let i = 0; i < workBook.SheetNames.length; i++) {
           this.invoices = [];
@@ -108,8 +113,18 @@ export class AppComponent {
           if (this.invoices.length > 0) {
             this.excelService.exportAsExcelFile(
               this.invoices,
-              this.exportFileName
+              this.exportFileName,
+              !this.isAutoDowload
             );
+            this.outputList.push(this.invoices);
+            this.checkIfOutputListNotEmpty();
+            const itemObj: IDisplayed = new Displayed();
+            itemObj.name = workBook.SheetNames[i];
+            if(itemObj.displayList === undefined){
+              itemObj.displayList = [];
+            }
+            itemObj.displayList.push(this.invoices);
+            this.displayedList.push(itemObj);
           } else {
             const msgObj = new ErrorMsg();
             msgObj.msg =
@@ -120,6 +135,7 @@ export class AppComponent {
               ' does not accept';
             msgObj.isDisplayed = true;
             this.errorMsg.push(msgObj);
+            this.checkIfOutputListNotEmpty();
           }
         }
       } else {
@@ -153,7 +169,16 @@ export class AppComponent {
         });
         this.countLineNO();
         if (this.invoices.length > 0) {
-          this.excelService.exportAsExcelFile(this.invoices, this.exportFileName);
+          this.excelService.exportAsExcelFile(this.invoices, this.exportFileName, !this.isAutoDowload);
+          this.outputList.push(this.invoices);
+          this.checkIfOutputListNotEmpty();
+          const itemObj: IDisplayed = new Displayed();
+          itemObj.name = workBook.SheetNames[0];
+          if(itemObj.displayList === undefined){
+            itemObj.displayList = [];
+          }
+          itemObj.displayList.push(this.invoices);
+          this.displayedList.push(itemObj);
         } else {
           const msgObj = new ErrorMsg();
           msgObj.msg =
@@ -162,11 +187,21 @@ export class AppComponent {
             ' does not accept';
           msgObj.isDisplayed = true;
           this.errorMsg.push(msgObj);
+          this.checkIfOutputListNotEmpty();
         }
       }
       this.resetFile();
     };
     reader.readAsBinaryString(file);
+  }
+
+  checkIfOutputListNotEmpty(): void{
+    if(this.outputList.length > 0){
+      this.hasOutput = true;
+    }
+    else{
+      this.hasOutput = false;
+    }
   }
 
   countLineNO(): void {
@@ -205,6 +240,7 @@ export class AppComponent {
 
   editOrder(): void {
     this.isEdit = !this.isEdit;
+    this.isAdding = false;
   }
 
   changeAcceptedFile(): void {
@@ -221,6 +257,7 @@ export class AppComponent {
 
   delItems(i: number): void {
     this.invoiceKeyList.splice(i, 1);
+    this.isAdding = false;
   }
 
   prepareAddingInput(): void {
@@ -277,6 +314,10 @@ export class AppComponent {
 
   changeAutoDowload(): void{
     this.isAutoDowload = !this.isAutoDowload;
+  }
+
+  dowloadTheFile(item): void{
+    this.excelService.exportAsExcelFile(item, this.exportFileName, false);
   }
 
   addShakingAnimation(targetId: string): void{
