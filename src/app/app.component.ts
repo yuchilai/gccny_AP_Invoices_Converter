@@ -3,6 +3,7 @@ import { ExcelService } from './service/excel.service';
 import * as XLSX from 'xlsx';
 import { IInvoice, Invoice } from './invoice.model';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { ErrorMsg, IErrorMsg } from './errorMsg.model';
 
 @Component({
   selector: 'my-app',
@@ -14,7 +15,12 @@ export class AppComponent {
   willDownload = false;
   invoiceKeyList: string[] = [];
   invoices: any[] = [];
-
+  errorMsg: IErrorMsg[] = [];
+  isEdit = false;
+  acceptExcelOnly = '.csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel';
+  isExcelOnly = true;
+  excelStyle = '  color: #141a46; background-color: #ec8b5e;';
+  notExcelStyle = '  color: #ec8b5e; background-color: #141a46;';
   constructor(private excelService: ExcelService) {
     const invoice = new Invoice();
     this.invoiceKeyList = Object.keys(invoice);
@@ -79,7 +85,8 @@ export class AppComponent {
               'export-to-excel'
             );
           } else {
-            alert('Sheet ' + i + 'None of the field matched');
+            const msgObj = new ErrorMsg();
+            msgObj.msg = 'Sheet ' + i + ' does not match any field names that are shown in the botton of the list';
           }
         }
       } else {
@@ -159,5 +166,13 @@ export class AppComponent {
 
   drop(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.invoiceKeyList, event.previousIndex, event.currentIndex);
+  }
+
+  editOrder(): void{
+    this.isEdit = !this.isEdit;
+  }
+
+  changeAcceptedFile(): void{
+    this.isExcelOnly = !this.isExcelOnly;
   }
 }
