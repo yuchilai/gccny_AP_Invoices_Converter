@@ -124,7 +124,9 @@ export class AppComponent {
               itemObj.displayList = [];
             }
             itemObj.displayList.push(this.invoices);
+            console.log(itemObj);
             this.displayedList.push(itemObj);
+            console.log(this.displayedList);
           } else {
             const msgObj = new ErrorMsg();
             msgObj.msg =
@@ -178,7 +180,9 @@ export class AppComponent {
             itemObj.displayList = [];
           }
           itemObj.displayList.push(this.invoices);
+          console.log('console.log(itemObj);'+itemObj);
           this.displayedList.push(itemObj);
+          console.log(this.displayedList);
         } else {
           const msgObj = new ErrorMsg();
           msgObj.msg =
