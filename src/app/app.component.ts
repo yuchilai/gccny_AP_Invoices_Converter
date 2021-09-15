@@ -43,7 +43,6 @@ export class AppComponent {
   constructor(private excelService: ExcelService) {
     const invoice = new Invoice();
     this.invoiceKeyList = Object.keys(invoice);
-    console.log(this.invoiceKeyList);
   }
 
   @HostListener('window:keyup', ['$event'])
@@ -74,7 +73,6 @@ export class AppComponent {
       // this.setDownload(dataString);
 
       const jsonArr = JSON.parse(dataString);
-      console.log('workBook.SheetNames.length' + workBook.SheetNames.length);
       if (workBook.SheetNames.length !== undefined) {
         for (let i = 0; i < workBook.SheetNames.length; i++) {
           this.invoices = [];
@@ -109,7 +107,7 @@ export class AppComponent {
           if (this.invoices.length > 0) {
             this.excelService.exportAsExcelFile(
               this.invoices,
-              'export-to-excel'
+              this.exportFileName
             );
           } else {
             const msgObj = new ErrorMsg();
@@ -154,7 +152,7 @@ export class AppComponent {
         });
         this.countLineNO();
         if (this.invoices.length > 0) {
-          this.excelService.exportAsExcelFile(this.invoices, 'export-to-excel');
+          this.excelService.exportAsExcelFile(this.invoices, this.exportFileName);
         } else {
           const msgObj = new ErrorMsg();
           msgObj.msg =
@@ -171,22 +169,13 @@ export class AppComponent {
   }
 
   countLineNO(): void {
-    console.log(this.invoices.length);
     for (let i = 0; i < this.invoices.length; i++) {
       const item = this.invoices[i];
-      // console.log(item);
-      // console.log(item.BILL_NO);
       let counting = 1;
-      console.log('i = ' + i);
       for (let j = i - 1; j >= 0; j--) {
-        console.log('j = ' + j);
         const compareObj = this.invoices[j];
-        // console.log(compareObj);
-        console.log('counting before = ' + counting);
         if (item.BILL_NO === compareObj.BILL_NO) {
-          console.log(item.BILL_NO + '===' + compareObj.BILL_NO);
           counting++;
-          console.log('counting ' + counting);
         }
       }
       item.LINE_NO = String(counting);
