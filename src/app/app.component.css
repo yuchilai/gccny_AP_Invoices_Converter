@@ -179,3 +179,34 @@ p {
   /* border-top: #143d59 solid 1px; */
   height: 20vh;
 }
+
+.excel-img-box {
+  margin-right: 10px;
+  display: inline;
+}
+
+#title {
+  display: inline;
+}
+
+.excel-output {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.excel-icon {
+}
+
+.download-link {
+  cursor: pointer;
+}
+
+.download-link:hover {
+  text-decoration: underline dotted;
+}
+
+.download-name {
+  display: block;
+  text-align: center;
+}

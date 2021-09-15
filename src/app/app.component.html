@@ -1,6 +1,9 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 
-<h1>{{ name }}</h1>
+<div class="excel-img-box">
+  <img src="https://cdn.jsdelivr.net/gh/yuchilai/gccny_AP_Invoices_Converter@master/src/app/image/icons8-microsoft-excel-96.png" alt="">
+</div>
+<h1 id="title">{{ name }}</h1>
 
 <div *ngFor="let item of errorMsg" class="error-box">
   <div *ngIf="item.isDisplayed" class="alert alert-danger d-flex align-items-center alert-dismissible fade show"
@@ -76,7 +79,8 @@
   <div class="excel-output">
     <div class="excel-icon">
       <a class="download-link">
-        <img src="./image/icons8-export-excel-96.png" alt="">
+        <img src="https://cdn.jsdelivr.net/gh/yuchilai/gccny_AP_Invoices_Converter@master/src/app/image/icons8-export-excel-96.png" alt="">
+        <span class="download-name">Download</span>
       </a>
     </div>
   </div>
