@@ -68,9 +68,9 @@ export class AppComponent {
         return initial;
       }, {});
       const dataString = JSON.stringify(jsonData);
-      document.getElementById('output').innerHTML = dataString
-        .slice(0, 300)
-        .concat('...');
+      // document.getElementById('output').innerHTML = dataString
+      //   .slice(0, 300)
+      //   .concat('...');
       // this.setDownload(dataString);
 
       const jsonArr = JSON.parse(dataString);
