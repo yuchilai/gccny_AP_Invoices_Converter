@@ -220,3 +220,33 @@ p {
   display: block;
   text-align: center;
 }
+
+.show-download-file{
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
+  flex-direction: column;
+  align-items: center;
+  color: rgb(65, 65, 65);
+  
+}
+
+.show-download-file-title{
+  margin-top: 10px;
+  color: #999;
+  cursor: pointer;
+}
+
+#down-icon{
+  cursor: pointer;
+}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}

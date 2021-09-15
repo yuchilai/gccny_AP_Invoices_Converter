@@ -43,6 +43,7 @@ export class AppComponent {
   hasOutput = false;
   outputList: any[] = [];
   displayedList: any[] = [];
+  isShowDownloadBtn = false;
 
   constructor(private excelService: ExcelService) {
     const invoice = new Invoice();
@@ -117,16 +118,23 @@ export class AppComponent {
               !this.isAutoDowload
             );
             this.outputList.push(this.invoices);
-            this.checkIfOutputListNotEmpty();
+            if(this.isAutoDowload){
+              if(this.checkIfOutputListNotEmpty()){
+                this.isShowDownloadBtn = true;
+              }
+            }
+            else{
+              if(this.checkIfOutputListNotEmpty()){
+                this.hasOutput = true;
+              }
+            }
             const itemObj: IDisplayed = new Displayed();
             itemObj.name = workBook.SheetNames[i];
             if(itemObj.displayList === undefined){
               itemObj.displayList = [];
             }
             itemObj.displayList.push(this.invoices);
-            console.log(itemObj);
             this.displayedList.push(itemObj);
-            console.log(this.displayedList);
           } else {
             const msgObj = new ErrorMsg();
             msgObj.msg =
@@ -173,16 +181,23 @@ export class AppComponent {
         if (this.invoices.length > 0) {
           this.excelService.exportAsExcelFile(this.invoices, this.exportFileName, !this.isAutoDowload);
           this.outputList.push(this.invoices);
-          this.checkIfOutputListNotEmpty();
+          if(this.isAutoDowload){
+            if(this.checkIfOutputListNotEmpty()){
+              this.isShowDownloadBtn = true;
+            }
+          }
+          else{
+            if(this.checkIfOutputListNotEmpty()){
+              this.hasOutput = true;
+            }
+          }
           const itemObj: IDisplayed = new Displayed();
           itemObj.name = workBook.SheetNames[0];
           if(itemObj.displayList === undefined){
             itemObj.displayList = [];
           }
           itemObj.displayList.push(this.invoices);
-          console.log('console.log(itemObj);'+itemObj);
           this.displayedList.push(itemObj);
-          console.log(this.displayedList);
         } else {
           const msgObj = new ErrorMsg();
           msgObj.msg =
@@ -199,12 +214,12 @@ export class AppComponent {
     reader.readAsBinaryString(file);
   }
 
-  checkIfOutputListNotEmpty(): void{
+  checkIfOutputListNotEmpty(): boolean{
     if(this.outputList.length > 0){
-      this.hasOutput = true;
+      return true;
     }
     else{
-      this.hasOutput = false;
+      return false;
     }
   }
 
@@ -323,6 +338,24 @@ export class AppComponent {
   dowloadTheFile(index: number): void{
     // this.excelService.exportAsExcelFile(item, this.exportFileName, false);
     this.excelService.exportAsExcelFile(this.outputList[index], this.exportFileName, false);
+  }
+
+  showDownloadFileBtn(): void{
+    
+    console.log(this.checkIfOutputListNotEmpty());
+    if(this.checkIfOutputListNotEmpty()){
+      this.isShowDownloadBtn = false;
+      this.hasOutput = true;
+    }
+    else{
+      const msgObj = new ErrorMsg();
+      msgObj.msg = 'Sorry! There is no files'
+      msgObj.isDisplayed = true;
+      if(this.errorMsg === undefined){
+        this.errorMsg = [];
+      }
+      this.errorMsg.push(msgObj);
+    }
   }
 
   addShakingAnimation(targetId: string): void{
