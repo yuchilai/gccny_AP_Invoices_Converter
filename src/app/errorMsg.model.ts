@@ -4,8 +4,5 @@ export interface IErrorMsg {
 }
 
 export class ErrorMsg implements IErrorMsg {
-  constructor(
-    public msg?: string, 
-    public isDisplayed?: boolean
-    ) {}
+  constructor(public msg?: string, public isDisplayed?: boolean) {}
 }

@@ -1,4 +1,4 @@
-import { Component, VERSION } from '@angular/core';
+import { Component, ElementRef, VERSION, ViewChild } from '@angular/core';
 import { ExcelService } from './service/excel.service';
 import * as XLSX from 'xlsx';
 import { IInvoice, Invoice } from './invoice.model';
@@ -10,17 +10,30 @@ import { ErrorMsg, IErrorMsg } from './errorMsg.model';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
+
 export class AppComponent {
-  name = 'Cassie';
+
+  @ViewChild('myInput')
+  myInputVariable: ElementRef;
+
+  name = 'Certify to Sage Intacct AP Invoices Converter';
   willDownload = false;
   invoiceKeyList: string[] = [];
   invoices: any[] = [];
   errorMsg: IErrorMsg[] = [];
+  fileName?: string;
   isEdit = false;
-  acceptExcelOnly = '.csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel';
+  acceptExcelOnly =
+    '.csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel';
   isExcelOnly = true;
   excelStyle = '  color: #141a46; background-color: #ec8b5e;';
   notExcelStyle = '  color: #ec8b5e; background-color: #141a46;';
+  exportFileName = 'AP_Invoices';
+  isEditExportFileName = false;
+
+
+
+
   constructor(private excelService: ExcelService) {
     const invoice = new Invoice();
     this.invoiceKeyList = Object.keys(invoice);
@@ -32,6 +45,7 @@ export class AppComponent {
     let jsonData = null;
     const reader = new FileReader();
     const file = ev.target.files[0];
+    this.fileName = ev.target.files[0].name;
     reader.onload = event => {
       const data = reader.result;
       workBook = XLSX.read(data, { type: 'binary' });
@@ -44,7 +58,7 @@ export class AppComponent {
       document.getElementById('output').innerHTML = dataString
         .slice(0, 300)
         .concat('...');
-      this.setDownload(dataString);
+      // this.setDownload(dataString);
 
       const jsonArr = JSON.parse(dataString);
       console.log('workBook.SheetNames.length' + workBook.SheetNames.length);
@@ -86,7 +100,14 @@ export class AppComponent {
             );
           } else {
             const msgObj = new ErrorMsg();
-            msgObj.msg = 'Sheet ' + i + ' does not match any field names that are shown in the botton of the list';
+            msgObj.msg =
+              'Sheet ' +
+              (i + 1) +
+              ' does not match any field names that are shown in the botton of the list OR File: ' +
+              this.fileName +
+              ' does not accept';
+            msgObj.isDisplayed = true;
+            this.errorMsg.push(msgObj);
           }
         }
       } else {
@@ -122,9 +143,16 @@ export class AppComponent {
         if (this.invoices.length > 0) {
           this.excelService.exportAsExcelFile(this.invoices, 'export-to-excel');
         } else {
-          alert('None of the field matched');
+          const msgObj = new ErrorMsg();
+          msgObj.msg =
+            'Sheet 1 does not match any field names that are shown in the botton of the list OR File: ' +
+            this.fileName +
+            ' does not accept';
+          msgObj.isDisplayed = true;
+          this.errorMsg.push(msgObj);
         }
       }
+      this.resetFile();
     };
     reader.readAsBinaryString(file);
   }
@@ -137,7 +165,7 @@ export class AppComponent {
       // console.log(item.BILL_NO);
       let counting = 1;
       console.log('i = ' + i);
-      for (let j = i-1; j >= 0; j--) {
+      for (let j = i - 1; j >= 0; j--) {
         console.log('j = ' + j);
         const compareObj = this.invoices[j];
         // console.log(compareObj);
@@ -145,7 +173,7 @@ export class AppComponent {
         if (item.BILL_NO === compareObj.BILL_NO) {
           console.log(item.BILL_NO + '===' + compareObj.BILL_NO);
           counting++;
-          console.log('counting '+counting);
+          console.log('counting ' + counting);
         }
       }
       item.LINE_NO = String(counting);
@@ -165,14 +193,26 @@ export class AppComponent {
   }
 
   drop(event: CdkDragDrop<string[]>) {
-    moveItemInArray(this.invoiceKeyList, event.previousIndex, event.currentIndex);
+    moveItemInArray(
+      this.invoiceKeyList,
+      event.previousIndex,
+      event.currentIndex
+    );
   }
 
-  editOrder(): void{
+  editOrder(): void {
     this.isEdit = !this.isEdit;
   }
 
-  changeAcceptedFile(): void{
+  changeAcceptedFile(): void {
     this.isExcelOnly = !this.isExcelOnly;
   }
+
+  closeErrorMsg(item: IErrorMsg): void {
+    item.isDisplayed = false;
+  }
+
+  resetFile() {
+    this.myInputVariable.nativeElement.value = "";
+}
 }
