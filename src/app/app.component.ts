@@ -40,71 +40,103 @@ export class AppComponent {
       this.setDownload(dataString);
 
       const jsonArr = JSON.parse(dataString);
-      this.invoices = [];
+      console.log('workBook.SheetNames.length' + workBook.SheetNames.length);
       if (workBook.SheetNames.length !== undefined) {
         for (let i = 0; i < workBook.SheetNames.length; i++) {
+          this.invoices = [];
           jsonArr[workBook.SheetNames[i]].forEach(obj => {
             const invoiceObj = this.invoiceKeyList.reduce((carry, item) => {
               carry[item] = undefined;
               return carry;
             }, {});
 
+            let isObjNotEmpty = false;
             for (var key in obj) {
               this.invoiceKeyList.forEach(k => {
                 // console.log("key: " + key + ", value: " + obj[key])
                 // console.log("k: " + k + ", value: " + invoiceObj[k]);
                 // console.log(key === k);
                 if (key === k) {
-                  invoiceObj[k] = obj[key];
+                  if(obj[key] !== undefined){
+                    invoiceObj[k] = obj[key];
+                    isObjNotEmpty = true;
+                  }
                 }
               });
               // console.log("key: " + key + ", value: " + obj[key])
             }
-            console.log('invoiceObj: ' + invoiceObj);
-            this.invoices.push(invoiceObj);
+            console.log(isObjNotEmpty)
+            console.log(invoiceObj)
+            if(isObjNotEmpty){
+              this.invoices.push(invoiceObj);
+            }
           });
           this.countLineNO();
-          this.excelService.exportAsExcelFile(this.invoices, 'export-to-excel');
+          if(this.invoices.length > 0){
+            this.excelService.exportAsExcelFile(this.invoices, 'export-to-excel');
+          }
+          else{
+            alert('None of the field matched');
+          }
         }
       } else {
+        this.invoices = [];
         jsonArr[workBook.SheetNames[0]].forEach(obj => {
           const invoiceObj = this.invoiceKeyList.reduce((carry, item) => {
             carry[item] = undefined;
             return carry;
           }, {});
 
+          let isObjNotEmpty = false;
           for (var key in obj) {
             this.invoiceKeyList.forEach(k => {
               // console.log("key: " + key + ", value: " + obj[key])
               // console.log("k: " + k + ", value: " + invoiceObj[k]);
               // console.log(key === k);
               if (key === k) {
-                invoiceObj[k] = obj[key];
+                if(obj[key] !== undefined){
+                  invoiceObj[k] = obj[key];
+                  isObjNotEmpty = true;
+                }
               }
             });
             // console.log("key: " + key + ", value: " + obj[key])
           }
-          console.log('invoiceObj: ' + invoiceObj);
-          this.invoices.push(invoiceObj);
+          console.log(isObjNotEmpty)
+          console.log(invoiceObj)
+          if(isObjNotEmpty){
+            this.invoices.push(invoiceObj);
+          }
         });
         this.countLineNO();
-        this.excelService.exportAsExcelFile(this.invoices, 'export-to-excel');
+        if(this.invoices.length > 0){
+          this.excelService.exportAsExcelFile(this.invoices, 'export-to-excel');
+        }
+        else{
+          alert('None of the field matched');
+        }
       }
     };
     reader.readAsBinaryString(file);
   }
 
   countLineNO(): void {
+    console.log(this.invoices.length)
     for (let i = 0; i < this.invoices.length; i++) {
       const item = this.invoices[i];
+      console.log(item);
+      console.log(item.BILL_NO);
       let counting = 1;
-      for (let j = i; i > 0; i--) {
-        const compareObj = this.invoices[j];
-        if (item.BILL_NO === compareObj.BILL_NO) {
-          counting++;
-        }
-      }
-      item.LINE_NO = String(counting);
+      let j = i
+      // console.log(i--);
+      // console.log(i>0);
+      // for (let j = i; i > 0; i--) {
+      //   const compareObj = this.invoices[j];
+      //   if (item.BILL_NO === compareObj.BILL_NO) {
+      //     counting++;
+      //   }
+      // }
+      // item.LINE_NO = String(counting);
     }
   }
 
